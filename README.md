@@ -409,27 +409,7 @@ Book-Library-Project/
 
 ---
 
-## 🤝 Contributing
-
-This is a personal learning project, but feedback and suggestions are welcome! Feel free to:
-
-- Open issues for bugs or feature requests
-- Submit pull requests for improvements
-- Share ideas in discussions
-
----
-
 ## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👤 Author
-
-**FP22FD**
-- GitHub: [@FP22FD](https://github.com/FP22FD)
-- Repository: [Book-Library-Project](https://github.com/FP22FD/Book-Library-Project)
 
 ---
 
