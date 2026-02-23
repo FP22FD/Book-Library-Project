@@ -1,17 +1,3 @@
-CD ./BooksLibrary/BooksLibrary.client
-> npm i
-
-
-Start PostgreSQL and Adminer
-
-> docker compose up -d
-
-Stop PostgreSQL and Adminer
-> docker compose down
-
-Adminer UI
-http://localhost:8080/
-
 # 📚 Book-Library Project
 
 A modern web application for managing and displaying a book catalog. This project demonstrates a full-stack architecture using .NET for the backend and React for the frontend, with a focus on clean code, scalability, and best practices.
@@ -137,6 +123,44 @@ The Minimum Viable Product focuses on a simple, working application with the fol
 - [Node.js](https://nodejs.org/) (v18+ recommended)
 - [Docker](https://www.docker.com/) (optional, for local database)
 - [Git](https://git-scm.com/)
+
+### 🧪 Local Development Setup
+
+#### 📦 Install Frontend Dependencies
+
+```bash
+cd ./BooksLibrary/BooksLibrary.client
+npm i
+```
+
+🐘 Start Local Database (PostgreSQL + Adminer)
+
+Start containers:
+
+```bash
+docker compose up -d
+```
+
+Stop containers:
+
+```bash 
+docker compose down
+```
+
+🖥️ Access Adminer UI
+
+Open in your browser:
+
+```bash 
+http://localhost:8080
+```
+Login:
+
+System: PostgreSQL
+Server: db
+Username: postgres
+Password: secret
+Database: (leave blank to see all databases)    
 
 ### Installation
 
