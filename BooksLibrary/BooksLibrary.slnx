@@ -4,6 +4,7 @@
     <File Path="../compose.yaml" />
     <File Path="../README.md" />
     <File Path=".editorconfig" />
+    <File Path="AGENTS.md" />
   </Folder>
   <Project Path="bookslibrary.client/bookslibrary.client.esproj">
     <Build />

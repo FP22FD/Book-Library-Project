@@ -184,10 +184,8 @@ Database: (leave blank to see all databases)
      dotnet user-secrets set "ConnectionStrings:DefaultConnection" "your-connection-string"
      ```
 
-4. **Run Database Migrations** (when using EF Core)
-   ```bash
-   dotnet ef database update
-   ```
+4. **Run Database Migrations**
+   - see [README.md](./BooksLibrary.Database/README.md)
 
 5. **Run the Backend**
    ```bash
