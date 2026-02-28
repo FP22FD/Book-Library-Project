@@ -21,6 +21,7 @@
     <ProjectReference Include="..\bookslibrary.client\bookslibrary.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\BooksLibrary.Services\BooksLibrary.Services.csproj" />
   </ItemGroup>
 
 </Project>
