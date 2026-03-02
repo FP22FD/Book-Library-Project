@@ -16,6 +16,11 @@ builder.Services
     .AddDbContext<BooksDbContext>(options =>
     {
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+        if (builder.Environment.IsDevelopment())
+        {
+            options.EnableSensitiveDataLogging();
+        }
     });
 
 // TODO: Transient, Scoped, Singleton
@@ -58,11 +63,12 @@ booksGroup.MapPost("", async (
     // 1- manual handling
     // 2- FluentValidation library
     // 3- Attributes in Request object
-    if (string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Authors)) {
-        return Results.Problem(statusCode: StatusCodes.Status400BadRequest,detail: "Title and Authors are mandatory");
+    if (string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Authors))
+    {
+        return Results.Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Title and Authors are mandatory");
     }
 
-    var result = await booksService.CreateBookAsync(request.Title, request.Authors);
+    var result = await booksService.CreateBookAsync(new CreateBookCommand(request.Title, request.Authors));
     var response = new BookResponse
     {
         BookId = result.BookId,
@@ -76,12 +82,17 @@ booksGroup.MapPost("", async (
     .Produces<BookResponse>(StatusCodes.Status200OK)
     .ProducesValidationProblem();
 
-booksGroup.MapGet("", async (
-    IBooksService booksService,
-    CancellationToken cancellationToken
-    ) =>
+booksGroup.MapGet("", async (IBooksService booksService, CancellationToken cancellationToken) =>
 {
-    return Results.Ok();
+    var result = await booksService.GetBooksAsync(cancellationToken);
+    var response = result.Select(x => new BookResponse
+    {
+        BookId = x.BookId,
+        Title = x.Title,
+        Authors = x.Authors,
+        CreatedAtUtc = x.CreatedAtUtc
+    }).ToList();
+    return Results.Ok(response);
 });
 
 var summaries = new[]
