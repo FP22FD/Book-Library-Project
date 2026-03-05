@@ -95,6 +95,39 @@ booksGroup.MapGet("", async (IBooksService booksService, CancellationToken cance
     return Results.Ok(response);
 });
 
+
+booksGroup.MapPut("{bookId:guid}", async (
+    Guid bookId, 
+    UpdateBookRequest request,
+    IBooksService booksService,
+    CancellationToken cancellationToken
+    ) =>
+{
+    if (string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Authors))
+    {
+        return Results.Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Title and Authors are mandatory");
+    }
+
+    var result = await booksService.UpdateBookAsync(new UpdateBookCommand(bookId, request.Title, request.Authors));
+
+     if (result is null)
+    {
+        return Results.NotFound();
+    }
+
+    var response = new BookResponse
+    {
+        BookId = result.BookId,
+        Title = result.Title,
+        Authors = result.Authors,
+        CreatedAtUtc = result.CreatedAtUtc
+    };
+    return Results.Ok(response);
+})
+    .WithName("UpdateBook")
+    .Produces<BookResponse>(StatusCodes.Status200OK)
+    .ProducesValidationProblem();
+
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"

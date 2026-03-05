@@ -14,6 +14,7 @@ namespace BooksLibrary.Services
     {
         Task<BookResult> CreateBookAsync(CreateBookCommand command);
         Task<List<BookResult>> GetBooksAsync(CancellationToken cancellationToken);
+        Task<BookResult?> UpdateBookAsync(UpdateBookCommand createBookCommand);
     }
 
     public class BooksService : IBooksService
@@ -60,5 +61,25 @@ namespace BooksLibrary.Services
                 .ToListAsync(cancellationToken);
             return rows;
         }
+
+        public async Task<BookResult?> UpdateBookAsync(UpdateBookCommand command)
+        {
+            // var book8 = await _dbContext.Books.FindAsync(command.BookId);
+            var book = await _dbContext.Books.SingleOrDefaultAsync(x => x.BookId == command.BookId);
+            if (book == null) { 
+                return null;
+            }
+
+            book.Title = command.Title;
+            book.Authors = command.Authors;
+
+            await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Updated book with ID {BookId}", book.BookId);
+
+            var result = BookResult.FromBook(book);
+            return result;
+        }
+
+
     }
 }
