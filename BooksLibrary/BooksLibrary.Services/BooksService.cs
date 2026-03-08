@@ -13,8 +13,10 @@ namespace BooksLibrary.Services
     public interface IBooksService
     {
         Task<BookResult> CreateBookAsync(CreateBookCommand command);
+        Task<BookResult?> GetBookAsync(Guid BookId, CancellationToken cancellationToken);
         Task<List<BookResult>> GetBooksAsync(CancellationToken cancellationToken);
         Task<BookResult?> UpdateBookAsync(UpdateBookCommand createBookCommand);
+        Task<bool?> DeleteBookAsync(Guid bookId, CancellationToken cancellationToken);
     }
 
     public class BooksService : IBooksService
@@ -51,11 +53,40 @@ namespace BooksLibrary.Services
             return result;
         }
 
+        public async Task<BookResult?> GetBookAsync(Guid bookId, CancellationToken cancellationToken)
+        {
+            var book = await _dbContext.Books
+                .Where(x => x.BookId == bookId)
+                .Select(x => new BookResult(x.BookId, x.Title, x.Authors, x.CreatedAtUtc))
+                .SingleOrDefaultAsync(cancellationToken);
+
+            if (book == null)
+            {
+                return null;
+            }
+
+            return book;
+        }
+
+        public async Task<bool?> DeleteBookAsync(Guid bookId, CancellationToken cancellationToken)
+        {
+            var book = await _dbContext.Books.SingleOrDefaultAsync(x => x.BookId == bookId);
+            if (book == null)
+            {
+                return null;
+            }
+
+            _dbContext.Books.Remove(book);
+            var affectedRows = await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("Deleted book with ID {BookId}", bookId);
+
+            return affectedRows > 0;
+        }
+
         public async Task<List<BookResult>> GetBooksAsync(CancellationToken cancellationToken)
         {
             var rows = await _dbContext.Books
-                //.AsNoTracking()
-                //.Where(x => x.Authors == "ghghgjh")
                 .OrderByDescending(x => x.CreatedAtUtc)
                 .Select(x => new BookResult(x.BookId, x.Title, x.Authors, x.CreatedAtUtc))
                 .ToListAsync(cancellationToken);
@@ -64,7 +95,6 @@ namespace BooksLibrary.Services
 
         public async Task<BookResult?> UpdateBookAsync(UpdateBookCommand command)
         {
-            // var book8 = await _dbContext.Books.FindAsync(command.BookId);
             var book = await _dbContext.Books.SingleOrDefaultAsync(x => x.BookId == command.BookId);
             if (book == null) { 
                 return null;

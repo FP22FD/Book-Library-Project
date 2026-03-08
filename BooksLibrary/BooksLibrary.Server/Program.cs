@@ -1,13 +1,15 @@
 using BooksLibrary.Database;
-using BooksLibrary.Server.Requests;
+using BooksLibrary.Server.EndPoints;
 using BooksLibrary.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+
+// const string SpaCors = "_SpaCors";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// https://localhost:7263/openapi/v1.json
 builder.Services.AddOpenApi();
 
 builder.Services.AddProblemDetails();
@@ -23,16 +25,30 @@ builder.Services
         }
     });
 
-// TODO: Transient, Scoped, Singleton
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: DevSpaCors, policy =>
+//    {
+//        policy.WithOrigins(
+//          "https://localhost:7263",
+//          "https://localhost:49676"
+//          )
+//        .AllowAnyHeader()
+//        .AllowAnyMethod()
+//        .AllowCredentials();
+//    });
+//});
+
 builder.Services.AddScoped<IBooksService, BooksService>();
 
-
 var app = builder.Build();
-
 
 // Apply migrations on startup (development only)
 if (app.Environment.IsDevelopment())
 {
+    // not needed as the SPA is served from same origin via MapStaticAssets()
+    // app.UseCors(DevSpaCors);
+
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<BooksDbContext>();
     db.Database.Migrate();
@@ -51,82 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var booksGroup = app.MapGroup("/api/books")
-    .WithTags("Books API");
-
-booksGroup.MapPost("", async (
-    CreateBookRequest request,
-    IBooksService booksService
-    ) =>
-{
-    // TODO:
-    // 1- manual handling
-    // 2- FluentValidation library
-    // 3- Attributes in Request object
-    if (string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Authors))
-    {
-        return Results.Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Title and Authors are mandatory");
-    }
-
-    var result = await booksService.CreateBookAsync(new CreateBookCommand(request.Title, request.Authors));
-    var response = new BookResponse
-    {
-        BookId = result.BookId,
-        Title = result.Title,
-        Authors = result.Authors,
-        CreatedAtUtc = result.CreatedAtUtc
-    };
-    return Results.Ok(response);
-})
-    .WithName("CreateBook")
-    .Produces<BookResponse>(StatusCodes.Status200OK)
-    .ProducesValidationProblem();
-
-booksGroup.MapGet("", async (IBooksService booksService, CancellationToken cancellationToken) =>
-{
-    var result = await booksService.GetBooksAsync(cancellationToken);
-    var response = result.Select(x => new BookResponse
-    {
-        BookId = x.BookId,
-        Title = x.Title,
-        Authors = x.Authors,
-        CreatedAtUtc = x.CreatedAtUtc
-    }).ToList();
-    return Results.Ok(response);
-});
-
-
-booksGroup.MapPut("{bookId:guid}", async (
-    Guid bookId, 
-    UpdateBookRequest request,
-    IBooksService booksService,
-    CancellationToken cancellationToken
-    ) =>
-{
-    if (string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Authors))
-    {
-        return Results.Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Title and Authors are mandatory");
-    }
-
-    var result = await booksService.UpdateBookAsync(new UpdateBookCommand(bookId, request.Title, request.Authors));
-
-     if (result is null)
-    {
-        return Results.NotFound();
-    }
-
-    var response = new BookResponse
-    {
-        BookId = result.BookId,
-        Title = result.Title,
-        Authors = result.Authors,
-        CreatedAtUtc = result.CreatedAtUtc
-    };
-    return Results.Ok(response);
-})
-    .WithName("UpdateBook")
-    .Produces<BookResponse>(StatusCodes.Status200OK)
-    .ProducesValidationProblem();
+app.MapBooksEndpoints();
 
 var summaries = new[]
 {

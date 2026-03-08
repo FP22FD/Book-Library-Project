@@ -1,12 +1,17 @@
-﻿namespace BooksLibrary.Server.Requests
-{
-    public class BookResponse
-    {
-        public Guid BookId { get; set; }
-        public required string Title { get; set; }
-        public required string Authors { get; set; }
-        public required DateTimeOffset CreatedAtUtc { get; set; }
+﻿using Microsoft.AspNetCore.Mvc;
 
+namespace BooksLibrary.Server.Requests
+{
+    public record BookResponse(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc)
+    {
+       
     }
 
+    public static class BookResponseExtension
+    {
+        public static BookResponse ToResponse(this BookResult bookResult)
+        {
+            return new BookResponse(bookResult.BookId, bookResult.Title, bookResult.Authors, bookResult.CreatedAtUtc);
+        } 
+    }
 }
