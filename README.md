@@ -458,3 +458,19 @@ Book-Library-Project/
 ---
 
 **Last Updated:** January 16, 2026
+
+### Minimal Api extras
+
+## DI Scopes
+ - Transient, 
+ - Scoped, 
+ - Singleton
+
+## Request payload validation
+ - Manual handling (IF...)
+ - Data Annotations in Request objects
+ - FluentValidation library
+
+## OpenApi definitions
+ - Endpoint definitions: https://localhost:7263/openapi/v1.json
+ - Scalar UI: https://localhost:7263/scalar/v1

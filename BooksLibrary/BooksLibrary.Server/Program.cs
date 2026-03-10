@@ -2,14 +2,17 @@ using BooksLibrary.Database;
 using BooksLibrary.Server.EndPoints;
 using BooksLibrary.Services;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 // const string SpaCors = "_SpaCors";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // https://localhost:7263/openapi/v1.json
+// https://localhost:7263/scalar/v1
 builder.Services.AddOpenApi();
 
 builder.Services.AddProblemDetails();
@@ -63,6 +66,7 @@ app.MapStaticAssets();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
