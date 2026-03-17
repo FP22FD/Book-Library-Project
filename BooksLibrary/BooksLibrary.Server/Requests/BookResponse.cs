@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace BooksLibrary.Server.Requests
-{
-    public record BookResponse(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc)
-    {
-       
-    }
+namespace BooksLibrary.Server.Requests;
 
-    public static class BookResponseExtension
+public record BookResponse(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc)
+{
+   
+}
+
+public static class BookResponseExtension
+{
+    public static BookResponse ToResponse(this BookResult bookResult)
     {
-        public static BookResponse ToResponse(this BookResult bookResult)
-        {
-            return new BookResponse(bookResult.BookId, bookResult.Title, bookResult.Authors, bookResult.CreatedAtUtc);
-        } 
-    }
+        return new BookResponse(bookResult.BookId, bookResult.Title, bookResult.Authors, bookResult.CreatedAtUtc);
+    } 
 }

@@ -7,6 +7,7 @@
     <SpaRoot>..\bookslibrary.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:49676</SpaProxyServerUrl>
+    <UserSecretsId>e03bbb25-0f80-4256-81f7-dee1120545c9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

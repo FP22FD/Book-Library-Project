@@ -8,69 +8,68 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BooksLibrary.Database.Migrations
+namespace BooksLibrary.Database.Migrations;
+
+[DbContext(typeof(BooksDbContext))]
+partial class BooksDbContextModelSnapshot : ModelSnapshot
 {
-    [DbContext(typeof(BooksDbContext))]
-    partial class BooksDbContextModelSnapshot : ModelSnapshot
+    protected override void BuildModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "10.0.3")
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BooksLibrary.Database.Book", b =>
-                {
-                    b.Property<Guid>("BookId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+        modelBuilder.Entity("BooksLibrary.Database.Book", b =>
+            {
+                b.Property<Guid>("BookId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
 
-                    b.Property<string>("Authors")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Authors")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'utc'");
+                b.Property<DateTimeOffset>("CreatedAtUtc")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("timestamp with time zone")
+                    .HasDefaultValueSql("NOW() AT TIME ZONE 'utc'");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
+                b.Property<string>("Description")
+                    .HasColumnType("text");
 
-                    b.Property<string>("GoogleBooksId")
-                        .HasColumnType("text");
+                b.Property<string>("GoogleBooksId")
+                    .HasColumnType("text");
 
-                    b.Property<string>("PreviewUrl")
-                        .HasColumnType("text");
+                b.Property<string>("PreviewUrl")
+                    .HasColumnType("text");
 
-                    b.Property<DateOnly?>("PublishedDate")
-                        .HasColumnType("date");
+                b.Property<DateOnly?>("PublishedDate")
+                    .HasColumnType("date");
 
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
+                b.Property<string>("Publisher")
+                    .HasColumnType("text");
 
-                    b.Property<string>("Subtitle")
-                        .HasColumnType("text");
+                b.Property<string>("Subtitle")
+                    .HasColumnType("text");
 
-                    b.Property<string>("ThumbnailUrl")
-                        .HasColumnType("text");
+                b.Property<string>("ThumbnailUrl")
+                    .HasColumnType("text");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnType("character varying(255)");
 
-                    b.HasKey("BookId");
+                b.HasKey("BookId");
 
-                    b.HasIndex("GoogleBooksId")
-                        .IsUnique();
+                b.HasIndex("GoogleBooksId")
+                    .IsUnique();
 
-                    b.ToTable("Books");
-                });
+                b.ToTable("Books");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

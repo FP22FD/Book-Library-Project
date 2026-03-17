@@ -1,4 +1,3 @@
-﻿namespace BooksLibrary.Services
-{
-    public record UpdateBookCommand(Guid BookId, string Title, string Authors);
-}
+﻿namespace BooksLibrary.Services;
+
+public record UpdateBookCommand(Guid BookId, string Title, string Authors);
