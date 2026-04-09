@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BooksLibrary.Services;
 
 namespace BooksLibrary.Server.Requests;
 
-public record BookResponse(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc)
-{
-   
-}
+public record BookResponse(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc);
 
 public static class BookResponseExtension
 {

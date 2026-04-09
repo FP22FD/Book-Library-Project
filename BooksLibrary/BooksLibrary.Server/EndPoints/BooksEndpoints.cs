@@ -8,7 +8,8 @@ public static class BooksEndpointsExtensions
     public static WebApplication MapBooksEndpoints(this WebApplication app)
     {
         var booksGroup = app.MapGroup("/api/books")
-            .WithTags("Books API");
+            .WithTags("Books API")
+            .RequireCors("AllowReactApp");
 
         booksGroup.MapPost("", CreateBookAsync)
             .WithName("CreateBook")
@@ -24,7 +25,7 @@ public static class BooksEndpointsExtensions
             .WithName("GetBooks")
             .Produces<BookResponse[]>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
-
+       
         booksGroup.MapPut("{bookId:guid}", EditBookAsync)
             .WithName("UpdateBook")
             .Produces<BookResponse>(StatusCodes.Status200OK)

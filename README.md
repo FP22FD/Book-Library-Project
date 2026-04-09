@@ -208,6 +208,25 @@ Database: (leave blank to see all databases)
    ```
    This will import 50-100 books from the Open Library dataset into your database.
 
+8. **Node.Js certificate**
+
+To ensure the ASP.NET Core development certificate is trusted by Node.js, you need to export the certificate and then configure Node.js to use it.
+1. Trust the Development Certificate on your Machine
+First, ensure the ASP.NET Core development certificate is installed and trusted on your local machine. You can do this by running the following command in your terminal:
+
+> dotnet dev-certs https --trust
+
+This command will install the certificate into your local user's certificate store. You may be prompted to accept the certificate.
+
+2. Export the Certificate
+Node.js does not use the Windows or macOS certificate store by default. You need to export the certificate to a file that Node.js can consume.
+1.	Create a directory to store the certificate, for example, a .certs folder in the root of your solution.
+2.	Run the following command to export the certificate in PEM format:
+
+> dotnet dev-certs https --export-path .\.certs\dev-cert.pem --format PEM
+
+NB. the `/.certs/` folder should be located in the root of the repo, that matches the `npm run dev` `NODE_EXTRA_CA_CERTS` path.
+
 ### Running with Docker (Optional)
 
 ```bash
