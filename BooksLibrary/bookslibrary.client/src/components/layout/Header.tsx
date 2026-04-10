@@ -1,11 +1,5 @@
 import Link from 'next/link';
 
-// import {
-//     PiBellLight,
-//     PiCalendarBlankLight,
-//     PiMagnifyingGlassLight
-// } from 'react-icons/pi';
-
 interface HeaderProps {
   className?: string;
 }
