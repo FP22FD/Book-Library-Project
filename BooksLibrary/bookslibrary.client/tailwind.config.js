@@ -99,10 +99,39 @@ module.exports = {
       addBase({
         '@font-face': [
           {
-            fontFamily: 'Playfair Display',
-            fontStyle: 'normal',
-            fontWeight: '400',
-            src: 'url("/fonts/PlayfairDisplay/PlayfairDisplay-Regular.ttf") format("TrueType")',
+            fontFamily: "Poppins",
+            fontStyle: "normal",
+            fontWeight: "400",
+            fontDisplay: "swap",
+            src: 'url("/fonts/Poppins/Poppins-Regular.ttf") format("truetype")',
+          },
+          {
+            fontFamily: "Poppins",
+            fontStyle: "italic",
+            fontWeight: "400",
+            fontDisplay: "swap",
+            src: 'url("/fonts/Poppins/Poppins-Italic.ttf") format("truetype")',
+          },
+          {
+            fontFamily: "Poppins",
+            fontStyle: "normal",
+            fontWeight: "500",
+            fontDisplay: "swap",
+            src: 'url("/fonts/Poppins/Poppins-Medium.ttf") format("truetype")',
+          },
+          {
+            fontFamily: "Poppins",
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontDisplay: "swap",
+            src: 'url("/fonts/Poppins/Poppins-SemiBold.ttf") format("truetype")',
+          },
+          {
+            fontFamily: "Poppins",
+            fontStyle: "normal",
+            fontWeight: "700",
+            fontDisplay: "swap",
+            src: 'url("/fonts/Poppins/Poppins-Bold.ttf") format("truetype")',
           },
           {
             fontFamily: 'Playfair Display',
