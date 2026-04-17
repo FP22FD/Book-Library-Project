@@ -1,69 +1,60 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import BookRow from './BookRow';
 import { PiArrowLeftLight, PiMagnifyingGlassLight } from 'react-icons/pi';
 import Dialog from '@/components/layout/Dialog';
 import AddBookForm from '@/components/home/AddBookForm';
 import Link from 'next/link';
-import type { Book } from './types/book';
+import { useBooks } from '@/services/hooks/useBooks';
 
-type Genre = {
-    name: string;
-    count: number;
-};
-
-const genres: Genre[] = [
-    { name: 'Fiction', count: 2 },
-    { name: 'Mystery', count: 4 },
-    { name: 'Biography', count: 6 },
-    { name: 'History', count: 3 },
-    { name: 'Philosophy', count: 5 },
-    { name: 'Poetry', count: 8 },
-    { name: 'Fantasy', count: 1 },
-];
+function normalizeCategory(value?: string | null): string {
+    return value?.trim().replace(/\.+$/, '').toUpperCase() ?? '';
+}
 
 type Props = {
     className?: string;
 };
 
 export default function AllBooksPage({ className }: Props) {
-    const [books, setBooks] = useState<Book[]>([]);
-    const [search, setSearch] = useState('');
-    const [genreFilter, setGenreFilter] = useState('All');
-    const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { books, loading, error } = useBooks();
 
-    // Fetch books from real API
-    useEffect(() => {
-        const fetchBooks = async () => {
-            try {
-                const response = await fetch('https://localhost:7263/api/books');
-                if (!response.ok) throw new Error(`Failed to fetch books: ${response.status}`);
-                const data: Book[] = await response.json();
-                setBooks(data);
-            } catch (err: any) {
-                console.error(err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
+    const [search, setSearch] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('All');
+    const [open, setOpen] = useState(false);
+
+    const categories = useMemo(() => {
+        const set = new Set<string>();
+        let hasUncategorized = false;
+
+        books.forEach((book) => {
+            const value = normalizeCategory(book.category);
+            if (value) {
+                set.add(value);
+            } else {
+                hasUncategorized = true;
             }
-        };
-        fetchBooks();
-    }, []);
+        });
+
+        const sorted = Array.from(set).sort((a, b) => a.localeCompare(b));
+        return ['All', ...sorted, ...(hasUncategorized ? ['Uncategorized'] : [])];
+    }, [books]);
 
     const filtered = useMemo(() => {
-        return books.filter(
-            (book) =>
-                (book.title.toLowerCase().includes(search.toLowerCase()) ||
-                    (book.authors?.toLowerCase().includes(search.toLowerCase()) ?? false)) &&
-                (genreFilter === 'All' /*|| book.genre === genreFilter*/),
-        );
-    }, [books, search, genreFilter]);
+        return books.filter((book) => {
+            const matchesSearch =
+                book.title.toLowerCase().includes(search.toLowerCase()) ||
+                (book.authors?.toLowerCase().includes(search.toLowerCase()) ?? false);
 
-    function handleAddBook(data: { title: string; author: string }) {
-        // TODO: Integrate with server in future (POST request)
+            const currentCategory = normalizeCategory(book.category) || 'Uncategorized';
+            const matchesCategory =
+                categoryFilter === 'All' || currentCategory === categoryFilter;
+
+            return matchesSearch && matchesCategory;
+        });
+    }, [books, search, categoryFilter]);
+
+    function handleAddBook(_data: { title: string; author: string }) {
         setOpen(false);
     }
 
@@ -113,33 +104,27 @@ export default function AllBooksPage({ className }: Props) {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="flex-1 bg-transparent outline-none text-sm transition-colors duration-200"
-                        aria-label="Search"
+                        aria-label="Search books"
                     />
-                    <span className="text-light-tag3t shrink-0 cursor-pointer">
+                    <span className="text-light-tag3t shrink-0" aria-hidden="true">
                         <PiMagnifyingGlassLight />
                     </span>
                 </div>
 
-                <div className="flex content-center space-x-4">
-                    <button
-                        type="button"
-                        onClick={() => setGenreFilter('All')}
-                        className={`py-1 px-2 rounded-lg text-sm transition-colors ${genreFilter === 'All' ? 'bg-light-bgActive text-light-bg1' : 'bg-light-bg3'
-                            }`}
-                    >
-                        All
-                    </button>
-                    {genres.map((genre) => (
+                <div className="flex flex-wrap content-center gap-2">
+                    {categories.map((category) => (
                         <button
-                            key={genre.name}
+                            key={category}
                             type="button"
-                            onClick={() => setGenreFilter(genre.name)}
-                            className={`py-1 px-2 rounded-lg text-sm transition-colors whitespace-nowrap ${genreFilter === genre.name
-                                ? 'bg-light-bgActive text-light-bg1'
-                                : 'bg-light-bg3 transition-colors hover:bg-light-bg1'
-                                }`}
+                            onClick={() => setCategoryFilter(category)}
+                            className={
+                                'py-1 px-2 rounded-lg text-sm transition-colors whitespace-nowrap uppercase' +
+                                (categoryFilter === category
+                                    ? ' bg-light-bgActive text-light-bg1'
+                                    : ' bg-light-bg3 hover:bg-light-bg1')
+                            }
                         >
-                            {genre.name}
+                            {category}
                         </button>
                     ))}
                 </div>
@@ -151,8 +136,7 @@ export default function AllBooksPage({ className }: Props) {
                     <thead className="text-light-text2 text-xs text-muted-foreground bg-light-bg2">
                         <tr>
                             <th className="py-2 px-4">Title</th>
-                            <th className="text-center">Genre</th>
-                            <th className="text-center">Rating</th>
+                            <th className="text-center">Category</th>
                             <th className="text-center">Pages</th>
                             <th className="text-center">Year</th>
                         </tr>
