@@ -8,7 +8,6 @@ import { PiEnvelopeLight } from 'react-icons/pi';
 
 export default function Sidebar() {
   const currentPath = usePathname();
-  console.log(currentPath);
 
   return (
     <aside className="flex flex-col flex-shrink-0 border-r bg-light-bg1 p-4 overflow-auto transition-colors duration-300">
