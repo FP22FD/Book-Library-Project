@@ -1,20 +1,17 @@
-import { PiStarFill, PiStarLight } from 'react-icons/pi';
+import { PiStarLight } from 'react-icons/pi';
 
 type Props = {
   rating: number;
-  size?: number; // optional to control the size
+  size?: number;
+  muted?: boolean;
 };
 
-export default function Stars({ rating, size = 12 }: Props) {
+export default function Stars({ size = 12, muted = false }: Props) {
   return (
-    <div className="flex gap-1 justify-center" aria-label={`Rating: ${rating} out of 5`}>
-      {[1, 2, 3, 4, 5].map((star) =>
-        star <= Math.floor(rating) ? (
-          <PiStarFill key={star} className="text-light-gold" size={size} aria-hidden="true" />
-        ) : (
-          <PiStarLight key={star} className="text-light-text2" size={size} aria-hidden="true" />
-        ),
-      )}
+    <div className="flex gap-1 justify-center" aria-label="Not rated">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <PiStarLight key={star} className={muted ? "text-light-gold" : "text-light-text-0"} size={size} aria-hidden="true" />
+      ))}
     </div>
   );
 }
