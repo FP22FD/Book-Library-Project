@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { Book } from '@/app/books/types/book';
-import { fetchBooks } from '@/services/books/booksApi';
+import { ErrorHandler } from '../ErrorHandler';
 
 type UseBooksResult = {
     books: Book[];
@@ -16,25 +16,49 @@ export function useBooks(): UseBooksResult {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const controller = new AbortController();
+        const booksController = new AbortController();
+        const { signal } = booksController;
 
-        async function loadBooks() {
+        const loadBooks = async () => {
             try {
-                const data = await fetchBooks(controller.signal);
-                setBooks(data);
-            } catch (err) {
-                if (err instanceof DOMException && err.name === 'AbortError') {
-                    return;
+                const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/api/books`,
+                    { signal }
+                );
+
+                if (response.ok) {
+                    const booksData = (await response.json()) as Book[];
+
+                    if (!signal.aborted) {
+                        setBooks(booksData);
+                        setError(null);
+                    }
+                } else {
+                    const errorHandler = new ErrorHandler(response);
+                    const message = await errorHandler.getErrorMessage();
+
+                    if (!signal.aborted) {
+                        setError(message);
+                        setBooks([]);
+                    }
                 }
-                setError(err instanceof Error ? err.message : 'Unknown error');
+            } catch (err) {
+                if (err instanceof Error && err.name !== 'AbortError') {
+                    setError('Could not load the books.');
+                    setBooks([]);
+                }
             } finally {
-                setLoading(false);
+                if (!signal.aborted) {
+                    setLoading(false);
+                }
             }
-        }
+        };
 
         void loadBooks();
 
-        return () => controller.abort();
+        return () => {
+            booksController.abort();
+        };
     }, []);
 
     return { books, loading, error };
