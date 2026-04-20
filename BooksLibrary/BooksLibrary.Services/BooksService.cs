@@ -1,13 +1,14 @@
 ﻿using BooksLibrary.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel;
 
 namespace BooksLibrary.Services;
 
 public record CreateBookCommand(string Title, string Authors);
-public record BookResult(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc)
+public record BookResult(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc, string? LanguageCode, string? Category, int? PageCount, string? ISBN, string? Description, string? ThumbnailUrl)
 {
-    public static BookResult FromBook(Book book) => new BookResult(book.BookId, book.Title, book.Authors, book.CreatedAtUtc);
+    public static BookResult FromBook(Book book) => new BookResult(book.BookId, book.Title, book.Authors, book.CreatedAtUtc, book.LanguageCode, book.Category, book.PageCount, book.ISBN, book.Description, book.ThumbnailUrl);
 }
 
 public interface IBooksService
@@ -57,7 +58,7 @@ public class BooksService : IBooksService
     {
         var book = await _dbContext.Books
             .Where(x => x.BookId == bookId)
-            .Select(x => new BookResult(x.BookId, x.Title, x.Authors, x.CreatedAtUtc))
+            .Select(x => new BookResult(x.BookId, x.Title, x.Authors, x.CreatedAtUtc, x.LanguageCode, x.Category, x.PageCount, x.ISBN, x.Description, x.ThumbnailUrl))
             .SingleOrDefaultAsync(cancellationToken);
 
         if (book == null)
@@ -88,7 +89,7 @@ public class BooksService : IBooksService
     {
         var rows = await _dbContext.Books
             .OrderByDescending(x => x.CreatedAtUtc)
-            .Select(x => new BookResult(x.BookId, x.Title, x.Authors, x.CreatedAtUtc))
+            .Select(x => new BookResult(x.BookId, x.Title, x.Authors, x.CreatedAtUtc, x.LanguageCode, x.Category, x.PageCount, x.ISBN, x.Description, x.ThumbnailUrl))
             .ToListAsync(cancellationToken);
         return rows;
     }
