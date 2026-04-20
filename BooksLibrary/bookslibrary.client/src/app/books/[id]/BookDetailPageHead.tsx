@@ -13,7 +13,20 @@ export default function BookDetailPageHead({ className }: Props) {
             </div>
 
             <Link
-                href={"/books"} className="flex place-items-center gap-2 cursor-pointer whitespace-nowrap transition-transform duration-200 ease-out hover:scale-105 active:scale-95 text-light-text2 hover:text-light-purple">
+                href={"/books"} className="
+                self-start
+                flex 
+                place-items-center 
+                gap-2 
+                cursor-pointer 
+                whitespace-nowrap 
+                transition-transform duration-200 
+                ease-out 
+                hover:scale-105 
+                active:scale-95
+                 text-light-text2 
+                 hover:text-light-purple
+                 text-sm">
                 <PiArrowLeftLight />
                 <span>Back to books</span>
             </Link>
