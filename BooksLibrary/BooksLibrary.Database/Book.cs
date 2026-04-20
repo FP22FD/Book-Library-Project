@@ -18,4 +18,9 @@ public class Book
     public string? PreviewUrl { get; set; }
     public string? GoogleBooksId { get; set; }
     public required DateTimeOffset CreatedAtUtc { get; set; }
+    public string? LanguageCode { get; set; }
+    public string? Category { get; set; }
+    public int? PageCount { get; set; }
+    public string? ISBN { get; set; }
+
 }
