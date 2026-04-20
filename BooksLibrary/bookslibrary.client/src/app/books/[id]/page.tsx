@@ -1,8 +1,6 @@
-import { notFound } from 'next/navigation';
-import { BookDetailsPage } from '../BookDetailsPage';
 import BookDetailPageHead from './BookDetailPageHead';
 import { Metadata } from 'next';
-import { getBookById } from '@/services/books/booksApi';
+import BookDetailsClient from './BookDetailsClient';
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://yoursite.com'),
@@ -36,9 +34,6 @@ type Props = {
 export default async function BookDetails({ params, className }: Props) {
     const { id } = await params;
 
-    const book = await getBookById(id).catch(() => null);
-    if (!book) return notFound();
-
     return (
         <section
             className={['flex flex-col text-base p-3', className]
@@ -46,9 +41,7 @@ export default async function BookDetails({ params, className }: Props) {
                 .join(' ')}
         >
             <BookDetailPageHead className="mb-6" />
-            <div className="flex flex-col gap-4 text-light-bg">
-                <BookDetailsPage {...book} />
-            </div>
+            <BookDetailsClient id={id} />
         </section>
     );
 }
