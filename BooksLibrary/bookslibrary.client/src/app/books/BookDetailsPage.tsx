@@ -1,11 +1,9 @@
-'use server';
-
 import Stars from './Starts';
 import DescriptionPreview from './BookDescription';
 import BookCoverPlaceholder from './BookPlaceholder';
 import type { Book } from './types/book';
 
-export async function BookDetailsPage({ bookId, title, authors, createdAtUtc, languageCode, pageCount, isbn, category, description, thumbnailUrl }: Book) {
+export function BookDetailsPage({ bookId, title, authors, createdAtUtc, languageCode, pageCount, isbn, category, description, thumbnailUrl }: Book) {
     return (
         <article
             id={`book-${bookId}`}
