@@ -1,5 +1,6 @@
 using BooksLibrary.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace BooksLibrary.GoogleBooksImporter;
 
@@ -33,31 +34,54 @@ public class Worker : IHostedService
 
             var books = await _googleBooksApiHttpClient.GetVolumes(0, 20);
 
-            foreach (var book in books.items)
-            {
-                var googleBooksId = book.id;
-                var title = book.volumeInfo.title;
-                var authors = string.Join(", ", book.volumeInfo.authors ?? []);
-
-                var exists = await dbContext.Books.AnyAsync(x => x.GoogleBooksId == googleBooksId, cancellationToken);
-                if (exists)
+            if (books?.items is not null) {
+                foreach (var book in books.items)
                 {
-                    continue;
+                    // Add these lines to log the full book data
+                    var bookJson = JsonSerializer.Serialize(book.volumeInfo, new JsonSerializerOptions { WriteIndented = true });
+                    _logger.LogInformation("--- Book data from Google API ---\n{BookJson}", bookJson);
+
+                    var googleBooksId = book.id;
+                    var title = book.volumeInfo.title;
+                    var authors = string.Join(", ", book.volumeInfo.authors ?? []);
+                    var category = book.volumeInfo.categories?.FirstOrDefault();
+                    var PageCount = book.volumeInfo.pageCount;
+                    var isbn13 = book.volumeInfo.industryIdentifiers?
+                       .FirstOrDefault(i => i.type == "ISBN_13")?
+                       .identifier;
+                    var description = book.volumeInfo.description;
+                    var thumbnailUrl = book.volumeInfo.imageLinks?.thumbnail;
+
+
+                    var exists = await dbContext.Books.AnyAsync(x => x.GoogleBooksId == googleBooksId, cancellationToken);
+                    if (exists)
+                    {
+                        continue;
+                    }
+
+                    _logger.LogInformation($"New book: {title}");
+
+                    var entityBook = new Book
+                    {
+                        BookId = Guid.NewGuid(),
+                        GoogleBooksId = googleBooksId,
+                        Title = title,
+                        Authors = authors,
+                        CreatedAtUtc = DateTimeOffset.UtcNow,
+                        LanguageCode = book.volumeInfo.language,
+                        Category = category,
+                        PageCount = book.volumeInfo.pageCount,
+                        ISBN = isbn13,
+                        Description = book.volumeInfo.description,
+                        ThumbnailUrl = book.volumeInfo.imageLinks?.thumbnail
+
+                    };
+
+                    dbContext.Books.Add(entityBook);
                 }
-
-                _logger.LogInformation($"New book: {title}");
-
-                var entityBook = new Book
-                {
-                    BookId = Guid.NewGuid(),
-                    GoogleBooksId = googleBooksId,
-                    Title = title,
-                    Authors = authors,
-                    CreatedAtUtc = DateTimeOffset.UtcNow
-                };
-
-                dbContext.Books.Add(entityBook);
             }
+
+           
 
             await dbContext.SaveChangesAsync();
         }
