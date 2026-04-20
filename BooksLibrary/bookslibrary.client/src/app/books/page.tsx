@@ -68,7 +68,7 @@ export default function AllBooksPage({ className }: Props) {
                     <h1 className="text-3xl font-bold">All Books</h1>
                     <Link
                         href="/"
-                        className="flex place-items-center gap-2 cursor-pointer whitespace-nowrap transition-transform duration-200 ease-out hover:scale-105 active:scale-95 text-light-text2 hover:text-light-purple"
+                        className="flex place-items-center gap-2 cursor-pointer whitespace-nowrap transition-transform duration-200 ease-out hover:scale-105 active:scale-95 text-light-text2 hover:text-light-purple text-sm"
                     >
                         <PiArrowLeftLight />
                         <span>Back to home</span>
