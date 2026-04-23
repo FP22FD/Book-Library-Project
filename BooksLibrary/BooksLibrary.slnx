@@ -12,6 +12,6 @@
   </Project>
   <Project Path="BooksLibrary.Database/BooksLibrary.Database.csproj" />
   <Project Path="BooksLibrary.GoogleBooksImporter/BooksLibrary.GoogleBooksImporter.csproj" Id="a094f528-477b-4144-a8a4-04127a4743d9" />
-  <Project Path="BooksLibrary.Server/BooksLibrary.Server.csproj" />
+  <Project Path="BooksLibrary.Server/BooksLibrary.WebApi.csproj" />
   <Project Path="BooksLibrary.Services/BooksLibrary.Services.csproj" Id="937ed0dd-2514-41c2-82b1-720c2f9a8e0a" />
 </Solution>
