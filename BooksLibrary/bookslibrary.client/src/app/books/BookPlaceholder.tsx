@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Image from 'next/image'
 
 type BookCoverPlaceholderProps = {
     src?: string | null;
@@ -38,9 +39,12 @@ export default function BookCoverPlaceholder({
     }
 
     return (
-        <img
+        <Image
             src={normalizedSrc}
             alt={alt}
+            width={800}
+            height={1200}
+            sizes="(max-width: 768px) 40vw, 20vw"
             className={className}
             onError={() => setHasError(true)}
             loading="lazy"

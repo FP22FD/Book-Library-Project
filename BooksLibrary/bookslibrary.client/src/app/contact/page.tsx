@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-
 import ContactPageHead from './ContactPageHead';
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://yoursite.com'),
@@ -40,10 +40,10 @@ export default function Contact({ className }: Props) {
       <div className="max-w-2xl text-light-text2">
         <div className="mb-8">
           <p>Feel free to get in touch for questions or feedback.</p>
-          <p>I'm always open to collaboration opportunities.</p>
-          <p>Whether it's a project, idea, or suggestion, I'd love to hear it.</p>
+          <p>I&apos;m always open to collaboration opportunities.</p>
+          <p>Whether it&apos;s a project, idea, or suggestion, I&apos;d love to hear it.</p>
           <p>You can reach me through the platforms below.</p>
-          <p>I'll respond as soon as possible.</p>
+          <p>I&apos;ll respond as soon as possible.</p>
         </div>
 
         <div className="not-italic mb-8">
@@ -52,14 +52,10 @@ export default function Contact({ className }: Props) {
               <a
                 href="https://www.linkedin.com/in/fernandapereiragomes/"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center p-2 text-typography-grey hover:scale-105 hover:text-typography-default border rounded-lg"
               >
-                <img
-                  src="/icons/linkedin.svg"
-                  loading="lazy"
-                  alt="LinkedIn"
-                  className="mr-2 h-6 w-6"
-                />
+                <Image src="/icons/linkedin.svg" alt="LinkedIn" width={24} height={24} className="mr-2" />
                 <span>LinkedIn</span>
               </a>
             </li>
@@ -67,9 +63,10 @@ export default function Contact({ className }: Props) {
               <a
                 href="https://github.com/FP22FD"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center p-2 text-typography-grey hover:scale-105 hover:text-typography-default border rounded-lg"
               >
-                <img src="/icons/github.svg" loading="lazy" alt="GitHub" className="mr-2 h-6 w-6" />
+                <Image src="/icons/github.svg" alt="GitHub" width={24} height={24} className="mr-2" />
                 <span>GitHub</span>
               </a>
             </li>
