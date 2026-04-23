@@ -28,11 +28,13 @@ public class GoogleBooksApiHttpClient : IGoogleBooksApiHttpClient
 
     public async Task<GoogleApiVolumesResponse?> GetVolumes(int startIndex, int maxResults)
     {
-        var key = _options.Value.GoogleBooksApiKey;
         var subject = _options.Value.GoogleBooksSubject;
 
-        // https://www.googleapis.com/books/v1/volumes?key=***&q=subject:crochet&maxResults=20&orderBy=newest&printType=books&projection=full
-        var uri = $"/books/v1/volumes?key={key}&q=subject:{subject}&startIndex={startIndex}&maxResults={maxResults}&orderBy=newest&printType=books&projection=full";
+        // https://www.googleapis.com/books/v1/volumes?q=subject:crochet&maxResults=20&orderBy=newest&printType=books&projection=full
+        //var uri = $"/books/v1/volumes?q=subject:{subject}&startIndex={startIndex}&maxResults={maxResults}&orderBy=newest&printType=books&projection=full";
+
+        var uri = $"/books/v1/volumes?q=subject:{subject}&startIndex={startIndex}&maxResults={maxResults}&orderBy=newest&printType=books&projection=full";
+
         var result = await _httpClient.GetFromJsonAsync<GoogleApiVolumesResponse>(uri);
         return result;
     }

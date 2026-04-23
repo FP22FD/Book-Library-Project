@@ -4,6 +4,8 @@ using BooksLibrary.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
+// This is ASP.NET Core 10.0 minimal API application.
+// The Program.cs file is the entry point of the application, where we configure services and the HTTP request pipeline.
 var builder = WebApplication.CreateBuilder(args);
 
 // CORS
@@ -31,12 +33,17 @@ builder.Services.AddCors(options =>
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 
+// PostgreSQL with Entity Framework Core. GetConnectionString looks for "DefaultConnection" in appsettings.json
+// BooksDbContext is data bse that contains DBSet the Books table.
 builder.Services.AddDbContext<BooksDbContext>(options =>
 {
+    // Use the connection string from appsettings.json
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 
     if (builder.Environment.IsDevelopment())
     {
+        // For development,
+        // we want to see the SQL queries being executed in the console for debugging purposes.
         options.EnableSensitiveDataLogging();
     }
 });
@@ -47,7 +54,6 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-// CORS
 app.UseCors("AllowReactApp");
 
 // Apply migrations on startup (development only)
