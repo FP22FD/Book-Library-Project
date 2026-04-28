@@ -31,6 +31,10 @@ type Props = {
  *        Next.js reactCompiler: https://nextjs.org/docs/app/api-reference/config/next-config-js/reactCompiler
  */
 export default function BookRow({ book }: Props) {
+  const hasRating =
+    book.averageRating != null && Number(book.averageRating) > 0;
+  // console.log('ROW rating:', book.title, book.averageRating);
+
   // -----------------------
   // Version with useMemo (example commented)
   // -----------------------
@@ -57,7 +61,7 @@ export default function BookRow({ book }: Props) {
           <p className="font-medium hover:text-light-purple">{book.title}</p>
         </Link>
 
-        {/* <p className="text-sm text-light-text2">{book.authors}</p> */}
+        <p className="text-sm text-light-text2">{book.authors}</p>
 
       </td>
 
@@ -69,9 +73,10 @@ export default function BookRow({ book }: Props) {
           {book.category?.trim() || 'Uncategorized'}
         </span>
       </td>
-      {/* <td className="text-sm text-light-text2 text-center">
-        <Stars rating={book.rating} />
-      </td> */}
+
+      <td className="text-sm text-light-text2 text-center">
+        <Stars rating={book.averageRating ?? 0} showValue={hasRating} />
+      </td>
       <td className="text-sm text-light-text2 text-center">{book.pageCount}</td>
       <td className="text-sm text-light-text2 text-center px-2">{new Date(book.createdAtUtc).getUTCFullYear()}</td>
     </tr>

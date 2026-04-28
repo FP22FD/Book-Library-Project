@@ -12,4 +12,5 @@ export interface Book {
   category?: string | null;
   description?: string | null;
   thumbnailUrl?: string | null;
+  averageRating?: number | null;
 }

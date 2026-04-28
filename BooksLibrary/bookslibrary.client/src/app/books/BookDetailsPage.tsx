@@ -3,7 +3,22 @@ import DescriptionPreview from './BookDescription';
 import BookCoverPlaceholder from './BookPlaceholder';
 import type { Book } from './types/book';
 
-export function BookDetailsPage({ bookId, title, authors, createdAtUtc, languageCode, pageCount, isbn, category, description, thumbnailUrl }: Book) {
+export function BookDetailsPage({
+    bookId,
+    title,
+    authors,
+    createdAtUtc,
+    languageCode,
+    pageCount,
+    isbn,
+    category,
+    description,
+    thumbnailUrl,
+    averageRating,
+}: Book) {
+    const hasRating =
+        averageRating != null && Number(averageRating) > 0;
+
     return (
         <article
             id={`book-${bookId}`}
@@ -11,20 +26,16 @@ export function BookDetailsPage({ bookId, title, authors, createdAtUtc, language
             className="flex flex-col gap-6"
         >
             <div className="flex flex-col gap-8 bg-light-bg1 p-8 rounded-xl shadow-md">
-
                 {/* Header */}
                 <header className="flex gap-6 border rounded-lg p-4">
-
                     {/* Cover */}
                     <figure className="rounded-xl p-5 bg-light-bg0 basis-1/5">
-
                         <BookCoverPlaceholder
                             src={thumbnailUrl}
                             alt={`Cover of book ${title}`}
                             className="object-cover w-full h-full"
                         />
                     </figure>
-
 
                     {/* Info */}
                     <div className="bg-light-bg1 rounded-xl p-5 basis-4/5">
@@ -37,12 +48,25 @@ export function BookDetailsPage({ bookId, title, authors, createdAtUtc, language
 
                         <p className="text-sm text-light-text2 mb-6">
                             <span className="italic font-semibold">by</span> {authors}
-                            <span className="text-light-text2"> · {new Date(createdAtUtc).getUTCFullYear()}</span>
+                            <span className="text-light-text2">
+                                {' '}
+                                · {new Date(createdAtUtc).getUTCFullYear()}
+                            </span>
                         </p>
 
-                        <div className="flex items-center gap-1 mb-6">
-                            <Stars rating={0} />
-                            <span className="text-xs text-light-text2">(No reviews yet)</span>
+                        {/* Rating */}
+                        <div className="mb-6 flex items-center gap-2">
+
+                            <Stars
+                                rating={averageRating ?? 0}
+                                showValue={hasRating}
+                            />
+
+                            {!hasRating && (
+                                <span className="text-sm text-light-text2">
+                                    No reviews yet
+                                </span>
+                            )}
                         </div>
 
                         <div className="flex flex-wrap gap-2">
@@ -51,16 +75,12 @@ export function BookDetailsPage({ bookId, title, authors, createdAtUtc, language
                     </div>
                 </header>
 
-                {/* Bottom section */}
+                {/* Bottom */}
                 <div className="flex gap-6">
-
                     {/* About */}
                     <section className="basis-2/3 bg-light-bg1 rounded-xl p-5 border">
                         <h2 className="font-semibold text-lg mb-2">About</h2>
-
-                        <div>
-                            <DescriptionPreview text={description} />
-                        </div>
+                        <DescriptionPreview text={description} />
                     </section>
 
                     {/* Details */}
@@ -89,7 +109,6 @@ export function BookDetailsPage({ bookId, title, authors, createdAtUtc, language
                             </div>
                         </dl>
                     </section>
-
                 </div>
             </div>
         </article>

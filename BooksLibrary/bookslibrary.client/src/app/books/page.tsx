@@ -137,6 +137,7 @@ export default function AllBooksPage({ className }: Props) {
                         <tr>
                             <th className="py-2 px-4">Title</th>
                             <th className="text-center">Category</th>
+                            <th className="text-center">Reviews</th>
                             <th className="text-center">Pages</th>
                             <th className="text-center">Year</th>
                         </tr>
