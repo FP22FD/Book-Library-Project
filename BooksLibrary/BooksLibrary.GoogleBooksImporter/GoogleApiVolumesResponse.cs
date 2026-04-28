@@ -7,7 +7,7 @@ namespace BooksLibrary.GoogleBooksImporter;
 public class GoogleApiVolumesResponse
 {
     public string Kind { get; set; }
-    public int totalItems { get; set; }
+    public long totalItems { get; set; }
     public Item[] items { get; set; }
 }
 
@@ -35,7 +35,7 @@ public class Volumeinfo
     public int pageCount { get; set; }
     public string printType { get; set; }
     public string[] categories { get; set; }
-    public int averageRating { get; set; }
+    public decimal? averageRating { get; set; }
     public int ratingsCount { get; set; }
     public string maturityRating { get; set; }
     public bool allowAnonLogging { get; set; }
