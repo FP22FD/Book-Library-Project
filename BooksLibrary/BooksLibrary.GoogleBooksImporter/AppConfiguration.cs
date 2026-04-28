@@ -7,5 +7,7 @@ namespace BooksLibrary.GoogleBooksImporter;
 public record AppConfiguration
 {
     public string GoogleBooksApiKey { get; init; } = string.Empty;
-    public string GoogleBooksSubject { get; init; } = string.Empty;
+
+    //public string GoogleBooksSubject { get; init; } = string.Empty;
+    public string[] GoogleBooksSubjects { get; init; } = [];
 }
