@@ -2,7 +2,7 @@
 
 namespace BooksLibrary.Server.Requests;
 
-public record BookResponse(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc, string? LanguageCode, string? Category, int? PageCount, string? ISBN, string? Description, string? ThumbnailUrl);
+public record BookResponse(Guid BookId, string Title, string Authors, DateTimeOffset CreatedAtUtc, string? LanguageCode, string? Category, int? PageCount, string? ISBN, string? Description, string? ThumbnailUrl, decimal? AverageRating);
 
 public static class BookResponseExtension
 {
@@ -18,7 +18,8 @@ public static class BookResponseExtension
             bookResult.PageCount,
             bookResult.ISBN,
             bookResult.Description,
-            bookResult.ThumbnailUrl
+            bookResult.ThumbnailUrl,
+            bookResult.AverageRating
             );
     }
 }
